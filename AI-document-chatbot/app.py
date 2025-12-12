@@ -9,12 +9,21 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 from openai import OpenAI
 from fastapi.middleware.cors import CORSMiddleware
+from dotenv import load_dotenv
 
 DATA_DIR = "data"
 INDEX_PATH = os.path.join(DATA_DIR, "index.faiss")
 DOCS_PATH = os.path.join(DATA_DIR, "documents.pkl")
 
-client = OpenAI()
+load_dotenv()
+
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+
+if not OPENAI_API_KEY:
+    raise RuntimeError("OPENAI_API_KEY is not set. Please define it in .env")
+
+client = OpenAI(api_key=OPENAI_API_KEY)
+
 EMBEDDING_MODEL = "text-embedding-3-small"
 CHAT_MODEL = "gpt-4o-mini"
 
